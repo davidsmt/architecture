@@ -23,3 +23,21 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+## Android architecture components: Lifecycle
+# generated GenericLifecycleObserver and it's empty constructor is considered to be unused by proguard
+-keepclasseswithmembers class * implements android.arch.lifecycle.GenericLifecycleObserver {
+<init>(...);
+}
+# keep Lifecycle State and Event enums with fields
+-keepclassmembers class android.arch.lifecycle.Lifecycle$* { *; }
+# keep methods annotated with @OnLifecycleEvent even if they seem to be unused
+# (Mostly for LiveData.LifecycleBoundObserver.onStateChange(), but who knows)
+-keepclassmembers class * {
+    @android.arch.lifecycle.OnLifecycleEvent *;
+}
+# ViewModel's empty constructor is considered to be unused by proguard
+-keepclassmembers class * extends android.arch.lifecycle.ViewModel {
+<init>(...);
+}
+
