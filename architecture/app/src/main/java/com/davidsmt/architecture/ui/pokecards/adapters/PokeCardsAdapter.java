@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.davidsmt.architecture.R;
 import com.davidsmt.architecture.databinding.LayoutPokecardItemBinding;
-import com.davidsmt.architecture.ui.viewmodels.PokeCardViewModel;
+import com.davidsmt.architecture.ui.pokecards.viewmodels.PokeCardViewModel;
 
 import java.util.List;
 

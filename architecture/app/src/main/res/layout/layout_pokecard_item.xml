@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.davidsmt.architecture.ui.viewmodels.PokeCardViewModel" />
+            type="com.davidsmt.architecture.ui.pokecards.viewmodels.PokeCardViewModel" />
     </data>
 
     <RelativeLayout
