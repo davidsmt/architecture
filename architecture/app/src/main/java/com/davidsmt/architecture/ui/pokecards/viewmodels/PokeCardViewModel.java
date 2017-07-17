@@ -1,7 +1,9 @@
-package com.davidsmt.architecture.ui.viewmodels;
+package com.davidsmt.architecture.ui.pokecards.viewmodels;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.StringDef;
 
 import com.davidsmt.architecture.BR;
@@ -19,7 +21,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  * Created by d.san.martin.torres on 6/14/17.
  */
 
-public class PokeCardViewModel extends BaseObservable {
+public class PokeCardViewModel extends BaseObservable implements Parcelable {
 
     @Retention(SOURCE)
     @StringDef({
@@ -135,4 +137,38 @@ public class PokeCardViewModel extends BaseObservable {
             return pokeCardViewModelList;
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.imageUrl);
+        dest.writeString(this.name);
+        dest.writeStringList(this.types);
+        dest.writeString(this.cardId);
+        dest.writeString(this.superType);
+    }
+
+    protected PokeCardViewModel(Parcel in) {
+        this.imageUrl = in.readString();
+        this.name = in.readString();
+        this.types = in.createStringArrayList();
+        this.cardId = in.readString();
+        this.superType = in.readString();
+    }
+
+    public static final Creator<PokeCardViewModel> CREATOR = new Creator<PokeCardViewModel>() {
+        @Override
+        public PokeCardViewModel createFromParcel(Parcel source) {
+            return new PokeCardViewModel(source);
+        }
+
+        @Override
+        public PokeCardViewModel[] newArray(int size) {
+            return new PokeCardViewModel[size];
+        }
+    };
 }
