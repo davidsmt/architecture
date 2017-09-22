@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Pokecards</string>
+    <string name="title_activity_splash">SplashActivity</string>
+</resources>
