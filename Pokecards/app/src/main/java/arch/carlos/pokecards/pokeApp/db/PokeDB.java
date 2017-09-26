@@ -9,7 +9,7 @@ import arch.carlos.pokecards.pokeApp.vo.PokeCard;
 /**
  * Main database description.
  */
-@Database(entities = {PokeCard.class}, version = 2)
+@Database(entities = {PokeCard.class}, version = 3)
 public abstract class PokeDB extends RoomDatabase {
     abstract public PokeCardDao pokeCardDao();
 }

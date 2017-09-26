@@ -19,37 +19,51 @@ package arch.carlos.pokecards.baseArch.db;
 import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.util.StringUtil;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import arch.carlos.pokecards.baseArch.cache.DomainCache;
+import arch.carlos.pokecards.pokeApp.vo.components.Ability;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class RoomTypeConverters {
+
     @TypeConverter
-    public static List<Integer> stringToIntList(String data) {
-        if (data == null) {
-            return Collections.emptyList();
-        }
-        return StringUtil.splitToIntList(data);
+    public static Ability getAbility(String json) {
+        return getData(json);
     }
 
     @TypeConverter
-    public static String intListToString(List<Integer> ints) {
-        return StringUtil.joinIntoString(ints);
+    public static String persisitAbility(Ability data) {
+        return getDataField(data);
     }
 
     @TypeConverter
-    public List<String> storedStringToLanguages(String value) {
-        List<String> strings = Arrays.asList(value.split("\\s*,\\s*"));
-        return strings;
+    public static ArrayList<String> getStringList(String json) {
+        return getData(json);
     }
 
     @TypeConverter
-    public String languagesToStoredString(List<String> strings) {
-        String value = "";
-        for (String lang :strings)
-            value += lang + ",";
+    public static String persistStringList(ArrayList<String> data) {
+        return getDataField(data);
+    }
 
-        return value;
+    static <T> String getDataField(T data){
+        Type type = new TypeToken<T>() {}.getType();
+        Gson gson = new Gson();
+        return gson.toJson(data,type);
+    }
+    static <T> T getData(String json){
+        Type type = new TypeToken<T>() {}.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(json,type);
     }
 
 }

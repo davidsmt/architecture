@@ -20,6 +20,7 @@ import arch.carlos.pokecards.pokeApp.vo.PokeCard;
  */
 @Dao
 public interface PokeCardDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(PokeCard card);
 
@@ -31,5 +32,13 @@ public interface PokeCardDao {
     LiveData<List<PokeCard>> getCards();
 
     @Query("SELECT * FROM PokeCard WHERE id = :pId")
-    LiveData<PokeCard> getCards(String pId);
+    LiveData<PokeCard> getCard(String pId);
+
+    @Query("DELETE FROM PokeCard")
+    void deleteAll();
+
+    @Query("DELETE FROM PokeCard WHERE id = :pId")
+    void deleteCard(String pId);
+
+
 }

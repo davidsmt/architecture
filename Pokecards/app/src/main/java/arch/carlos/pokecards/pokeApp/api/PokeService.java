@@ -19,12 +19,10 @@ package arch.carlos.pokecards.pokeApp.api;
 
 import android.arch.lifecycle.LiveData;
 
-import java.util.List;
-
 import arch.carlos.pokecards.baseArch.api.ApiResponse;
-import arch.carlos.pokecards.pokeApp.api.intermediate.PokeCardListResponse;
+import arch.carlos.pokecards.pokeApp.api.apimodel.PokeCardListResponse;
+import arch.carlos.pokecards.pokeApp.api.apimodel.PokeCardResponse;
 import arch.carlos.pokecards.pokeApp.vo.PokeCard;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -40,6 +38,6 @@ public interface PokeService {
     LiveData<ApiResponse<PokeCardListResponse>> getPokeCards();
 
     @GET("cards/{id}")
-    LiveData<ApiResponse<PokeCard>> getPokeCard(@Path("id") String id);
+    LiveData<ApiResponse<PokeCardResponse>> getPokeCard(@Path("id") String id);
 
 }

@@ -6,7 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import java.util.List;
 
 import arch.carlos.pokecards.baseArch.api.ApiResponse;
-import arch.carlos.pokecards.pokeApp.api.intermediate.PokeCardListResponse;
+import arch.carlos.pokecards.pokeApp.api.apimodel.PokeCardListResponse;
 import arch.carlos.pokecards.pokeApp.vo.PokeCard;
 
 /**

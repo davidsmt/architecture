@@ -57,6 +57,20 @@ public class PokeCardListAdapter extends RecyclerView.Adapter<PokeCardViewHolder
 
     }
 
+    public void updateItems(List<PokeCard> nItems){
+        items = nItems;
+        notifyDataSetChanged();
+    }
+
+    public void addItem(PokeCard nItem){
+        items.add(nItem);
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(PokeCard nItem){
+        items.remove(nItem);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {

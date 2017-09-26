@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import arch.carlos.pokecards.baseArch.viewmodel.ViewModelFactory;
-import arch.carlos.pokecards.pokeApp.ui.main.PokeCardViewModel;
+import arch.carlos.pokecards.pokeApp.ui.main.PokeCardListViewModel;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
@@ -16,7 +16,7 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(PokeCardViewModel.class)
-    abstract ViewModel bindPokeCardViewModel(PokeCardViewModel viewModel);
+    @ViewModelKey(PokeCardListViewModel.class)
+    abstract ViewModel bindPokeCardViewModel(PokeCardListViewModel viewModel);
 
 }

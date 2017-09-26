@@ -26,20 +26,22 @@ public class DomainCache {
      * PrimaryKey: The index of the item
      */
     public interface Cacheable {
-        public String getDomainKey();
-        public String getPrimaryKey();
+        String getDomainKey();
+
+        String getPrimaryKey();
     }
 
-    public void init(){
+    public void init() {
         cache = new HashMap<>();
     }
 
-    public boolean hasCacheForDomain(String domainKey){
+    public boolean hasCacheForDomain(String domainKey) {
         return cache.containsKey(domainKey);
     }
-    private HashMap<String, Cacheable> getDomainCache(String domainKey){
+
+    public HashMap<String, Cacheable> getDomainCache(String domainKey) {
         // If there is no previous cache of the domain
-        if(!hasCacheForDomain(domainKey)){
+        if (!hasCacheForDomain(domainKey)) {
             cache.put(domainKey, new HashMap<>());
         }
 
@@ -47,20 +49,20 @@ public class DomainCache {
     }
 
 
-    public <T extends Cacheable>void  addResource(T nCacheable) {
+    public <T extends Cacheable> void addResource(T nCacheable) {
         HashMap<String, Cacheable> domainCache = getDomainCache(nCacheable.getDomainKey());
-        domainCache.put(nCacheable.getPrimaryKey(),nCacheable);
+        domainCache.put(nCacheable.getPrimaryKey(), nCacheable);
     }
 
-    public <T extends Cacheable>void addResource(String domainKey, List<T> nCacheables) {
+    public <T extends Cacheable> void addResource(String domainKey, List<T> nCacheables) {
         HashMap<String, Cacheable> domainCache = getDomainCache(domainKey);
-        for (Cacheable item: nCacheables
-             ) {
-            domainCache.put(item.getPrimaryKey(),item);
+        for (Cacheable item : nCacheables
+                ) {
+            domainCache.put(item.getPrimaryKey(), item);
         }
     }
 
-    public <T extends Cacheable> LiveData<List<T>> getResources(String domainKey){
+    public <T extends Cacheable> LiveData<List<T>> getResource(String domainKey) {
         MutableLiveData<List<T>> resources = new MutableLiveData<>();
         Collection<T> collection = (Collection<T>) getDomainCache(domainKey).values();
         ArrayList<T> result = new ArrayList<>(collection);
@@ -68,9 +70,23 @@ public class DomainCache {
         return resources;
     }
 
-    public LiveData<Cacheable> getResource(String domainKey, String primaryKey){
-        MutableLiveData<Cacheable> resource = new MutableLiveData<>();
-        resource.setValue(getDomainCache(domainKey).get(primaryKey));
+    public <T extends Cacheable> LiveData<T> getResource(String domainKey, String primaryKey) {
+        MutableLiveData<T> resource = new MutableLiveData<>();
+        resource.setValue((T)getDomainCache(domainKey).get(primaryKey));
         return resource;
+    }
+
+    public void deleteResource(String domainKey) {
+        // If there is some previous cache of the domain
+        if (hasCacheForDomain(domainKey)) {
+            cache.put(domainKey, new HashMap<>());
+        }
+    }
+
+    public <T extends Cacheable> void deleteResource(T nCacheable){
+        getDomainCache(nCacheable.getDomainKey()).remove(nCacheable.getPrimaryKey());
+    }
+    public <T extends Cacheable> void deleteResource(String domainKey, String primaryKey){
+        getDomainCache(domainKey).remove(primaryKey);
     }
 }

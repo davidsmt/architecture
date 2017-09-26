@@ -1,12 +1,9 @@
-package arch.carlos.pokecards.pokeApp.api.intermediate;
-
-import android.arch.lifecycle.LiveData;
+package arch.carlos.pokecards.pokeApp.api.apimodel;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import arch.carlos.pokecards.baseArch.api.ApiResponse;
 import arch.carlos.pokecards.pokeApp.vo.PokeCard;
 
 /**
