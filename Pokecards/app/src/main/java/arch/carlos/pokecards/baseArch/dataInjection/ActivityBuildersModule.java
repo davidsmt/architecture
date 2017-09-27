@@ -1,4 +1,4 @@
-package arch.carlos.pokecards.baseArch.di;
+package arch.carlos.pokecards.baseArch.dataInjection;
 
 import arch.carlos.pokecards.pokeApp.ui.main.MainActivity;
 import dagger.Module;

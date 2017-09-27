@@ -6,7 +6,7 @@ import android.content.Context;
 
 import javax.inject.Inject;
 
-import arch.carlos.pokecards.baseArch.di.AppInjector;
+import arch.carlos.pokecards.baseArch.dataInjection.AppInjector;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;

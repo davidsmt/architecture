@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import arch.carlos.pokecards.baseArch.di.Injectable;
+import arch.carlos.pokecards.baseArch.dataInjection.Injectable;
 import arch.carlos.pokecards.baseArch.viewmodel.ViewModelFactory;
 
 /**

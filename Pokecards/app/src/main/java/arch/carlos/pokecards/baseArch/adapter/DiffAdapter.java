@@ -33,9 +33,7 @@ public abstract class DiffAdapter<T extends DomainCache.Cacheable, VH extends Re
      * @param nItems new items the recycler will show
      */
     public void differUpdate(List<T> nItems){
-        ListDifferUtil<T> nDiff = new ListDifferUtil<>(nItems,currentItems);
-        this.currentItems.clear();
-        this.currentItems.addAll(nItems);
-        nDiff.updateList(this);
+        this.currentItems = nItems;
+        notifyDataSetChanged();
     }
 }

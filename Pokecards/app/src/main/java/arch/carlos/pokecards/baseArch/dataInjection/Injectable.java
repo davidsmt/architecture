@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package arch.carlos.pokecards.baseArch.di;
+package arch.carlos.pokecards.baseArch.dataInjection;
 
 /**
  * Marks an activity / fragment injectable.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package arch.carlos.pokecards.baseArch.di;
+package arch.carlos.pokecards.baseArch.dataInjection;
 
 import android.app.Activity;
 import android.app.Application;
@@ -23,11 +23,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
-import arch.carlos.pokecards.baseArch.ArchActivity;
 import arch.carlos.pokecards.baseArch.ArchApplication;
 import dagger.android.AndroidInjection;
 import dagger.android.support.AndroidSupportInjection;
-import dagger.android.support.HasSupportFragmentInjector;
 
 /**
  * Helper class to automatically inject fragments if they implement {@link Injectable}.

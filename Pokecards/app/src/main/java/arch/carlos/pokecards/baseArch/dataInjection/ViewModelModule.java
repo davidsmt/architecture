@@ -1,4 +1,4 @@
-package arch.carlos.pokecards.baseArch.di;
+package arch.carlos.pokecards.baseArch.dataInjection;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;

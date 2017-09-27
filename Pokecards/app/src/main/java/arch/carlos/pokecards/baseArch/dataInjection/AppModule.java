@@ -1,4 +1,4 @@
-package arch.carlos.pokecards.baseArch.di;
+package arch.carlos.pokecards.baseArch.dataInjection;
 
 /*
  * Copyright (C) 2017 The Android Open Source Project
