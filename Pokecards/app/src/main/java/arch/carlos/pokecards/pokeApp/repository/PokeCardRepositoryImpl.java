@@ -13,7 +13,9 @@ import arch.carlos.pokecards.baseArch.api.ApiResponse;
 import arch.carlos.pokecards.baseArch.repository.BaseRepositoryCreate;
 import arch.carlos.pokecards.baseArch.repository.BaseRepositoryDelete;
 import arch.carlos.pokecards.baseArch.repository.BaseRepositoryRead;
+import arch.carlos.pokecards.baseArch.repository.CallResponse;
 import arch.carlos.pokecards.baseArch.repository.RepositoryService;
+import arch.carlos.pokecards.baseArch.repository.notImplemented.CacheNotImplemented;
 import arch.carlos.pokecards.baseArch.vo.Resource;
 import arch.carlos.pokecards.pokeApp.api.apimodel.PokeCardListResponse;
 import arch.carlos.pokecards.pokeApp.api.apimodel.PokeCardResponse;
@@ -27,7 +29,6 @@ public class PokeCardRepositoryImpl {
 
     public final static String errorExample = "Example error msg";
     private final RepositoryService service;
-
     @Inject
     PokeCardRepositoryImpl(RepositoryService repo) {
         this.service = repo;
@@ -88,7 +89,7 @@ public class PokeCardRepositoryImpl {
         }).getFrom(loadFromCache, loadFromDB, loadFromAPI);
     }
 
-    public LiveData<Resource<PokeCard>> getPokeCard(final String id, boolean loadFromCache, boolean loadFromDB, boolean loadFromAPI){
+    public LiveData<Resource<PokeCard>> getPokeCard(final String id, boolean loadFromCache, boolean loadFromDB, boolean loadFromAPI) {
         return new BaseRepositoryRead<>(service.getAppExecutors(), new BaseRepositoryRead.CacheReadImpl<PokeCard>() {
             @Override
             public boolean CACHE_hasDomainCache() {
@@ -133,30 +134,11 @@ public class PokeCardRepositoryImpl {
                     partialData.setValue(Resource.error(errorExample, null));
                 }
             }
-        }).getFrom(loadFromCache,loadFromDB,loadFromAPI);
+        }).getFrom(loadFromCache, loadFromDB, loadFromAPI);
     }
 
-    public void deletePokeCards(boolean deleteCache, boolean deleteDB, boolean deleteAPI){
-        new BaseRepositoryDelete <ApiResponse<Object>>(service.getAppExecutors(), new BaseRepositoryDelete.CacheDeleteImpl() {
-            @Override
-            public boolean CACHE_hasDomainCache() {
-                return service.getCache().hasCacheForDomain(PokeCard.DOMAIN_KEY);
-            }
-
-            @Override
-            public void CACHE_delete() {
-                service.getCache().deleteResource(PokeCard.DOMAIN_KEY);
-            }
-        }, new BaseRepositoryDelete.DBDeleteImpl() {
-            @Override
-            public void BD_delete() {
-                service.getDb().pokeCardDao().deleteAll();
-            }
-        }).deleteFrom(deleteCache,deleteDB,deleteAPI);
-    }
-
-    public String deletePokeCard(String id, boolean deleteCache, boolean deleteDB, boolean deleteAPI){
-        new BaseRepositoryDelete <ApiResponse<Object>>(service.getAppExecutors(), new BaseRepositoryDelete.CacheDeleteImpl() {
+    public LiveData<Resource<CallResponse>> deletePokeCard(String id, boolean deleteCache, boolean deleteDB, boolean deleteAPI) {
+        return new BaseRepositoryDelete<CallResponse>(service.getAppExecutors(), new BaseRepositoryDelete.CacheDeleteImpl() {
             @Override
             public boolean CACHE_hasDomainCache() {
                 return service.getCache().getDomainCache(PokeCard.DOMAIN_KEY).containsKey(id);
@@ -164,20 +146,19 @@ public class PokeCardRepositoryImpl {
 
             @Override
             public void CACHE_delete() {
-                service.getCache().deleteResource(PokeCard.DOMAIN_KEY,id);
+                service.getCache().deleteResource(PokeCard.DOMAIN_KEY, id);
             }
         }, new BaseRepositoryDelete.DBDeleteImpl() {
             @Override
             public void BD_delete() {
                 service.getDb().pokeCardDao().deleteCard(id);
             }
-        }).deleteFrom(deleteCache,deleteDB,deleteAPI);
+        }).deleteFromAllSources();
 
-        return id;
     }
 
-    public String addPokeCard(PokeCard nCard, boolean addToCache, boolean addToDB, boolean addToAPI){
-        new BaseRepositoryCreate<ApiResponse<Object>>(service.getAppExecutors(), new BaseRepositoryCreate.CacheCreateImpl() {
+    public LiveData<Resource<CallResponse>> addPokeCard(PokeCard nCard, boolean addToCache, boolean addToDB, boolean addToAPI) {
+        return new BaseRepositoryCreate<CallResponse>(service.getAppExecutors(), new BaseRepositoryCreate.CacheCreateImpl() {
             @Override
             public void CACHE_create() {
                 service.getCache().addResource(nCard);
@@ -187,9 +168,8 @@ public class PokeCardRepositoryImpl {
             public void DB_create() {
                 service.getDb().pokeCardDao().insert(nCard);
             }
-        }){
-        };
-        return nCard.getId();
+        }).createToAllSources();
+
     }
 
 }

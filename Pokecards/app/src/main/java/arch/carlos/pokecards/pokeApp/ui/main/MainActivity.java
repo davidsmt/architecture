@@ -8,15 +8,18 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import arch.carlos.pokecards.R;
 import arch.carlos.pokecards.baseArch.ArchActivity;
 import arch.carlos.pokecards.baseArch.ArchApplication;
+import arch.carlos.pokecards.baseArch.cache.DomainCache;
 import arch.carlos.pokecards.baseArch.vo.Resource;
 import arch.carlos.pokecards.baseArch.vo.Status;
 import arch.carlos.pokecards.databinding.FragmentCardsBinding;
+import arch.carlos.pokecards.pokeApp.api.PokeService;
 import arch.carlos.pokecards.pokeApp.ui.main.adapter.PokeCardListAdapter;
 import arch.carlos.pokecards.pokeApp.vo.PokeCard;
-import arch.carlos.pokecards.pokeApp.vo.components.Ability;
 
 public class MainActivity extends ArchActivity {
 
@@ -24,9 +27,15 @@ public class MainActivity extends ArchActivity {
     PokeCardListViewModel mViewModel;
     PokeCardListAdapter mAdapter;
 
+
+    @Inject
+    DomainCache cache;
+
+    @Inject
+    PokeService service;
+
     @Override
     protected void initActivity() {
-
     }
 
     @Override
@@ -34,66 +43,38 @@ public class MainActivity extends ArchActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.fragment_cards);
         LinearLayoutManager llm = new LinearLayoutManager(ArchApplication.getContext());
         mBinding.recyclerView.setLayoutManager(llm);
+
+        mAdapter = new PokeCardListAdapter(this::deleteItem);
+        mBinding.recyclerView.setAdapter(mAdapter);
     }
 
     @Override
     protected void initViewModel() {
         mViewModel = ViewModelProviders.of(this, viewModelFactory).get(PokeCardListViewModel.class);
+        mViewModel.getPokeCardList().observe(this, this::showCards);
 
-        mViewModel.getCardList(false, true, true).observe(this, listResource -> {
-            if (listResource != null) {
-                showCards(listResource);
 
-            }
-        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mViewModel.getPokeCardList();
     }
 
     private void showCards(Resource<List<PokeCard>> cards) {
-        if (cards.status == Status.LOADING && cards.data == null) {
-            mBinding.progressBar.setVisibility(View.VISIBLE);
-        }
-        if (cards.status == Status.SUCCESS || cards.status == Status.LOADING && cards.data != null) {
-            if (mAdapter == null) {
-                mAdapter = new PokeCardListAdapter(cards.data, (id) -> {
-                    deleteItem(id);
-                });
-                mBinding.recyclerView.setAdapter(mAdapter);
-                addFakePokemon();
-            } else {
-                mAdapter.updateItems(cards.data);
-            }
 
-        }
-        if (cards.status == Status.SUCCESS) {
-            mBinding.progressBar.setVisibility(View.GONE);
+        mBinding.progressBar.setVisibility(cards.status == Status.SUCCESS ? View.GONE : View.VISIBLE);
+
+        if (cards.data != null) {
+            mAdapter.differItems(cards.data);
+
         }
     }
 
 
-    private void deleteItem(String id) {
-        mViewModel.deleteCard(id, true, true);
-        mViewModel.getCardList(true, false, false).observe(this, listResource -> {
-            if (listResource.status == Status.SUCCESS) {
-                mAdapter.updateItems(listResource.data);
-
-            }
-        });
+    private void deleteItem(PokeCard card) {
+        mViewModel.deleteCard(card, true, true);
     }
-
-    private void addFakePokemon() {
-//        mViewModel.addCard(fakeCard(), true, true);
-//        mViewModel.getCardList(true, false, false).observe(this, listResource -> {
-//            if (listResource.status == Status.SUCCESS) {
-//                mAdapter.updateItems(listResource.data);
-//            }
-//        });
-    }
-
-//    private PokeCard fakeCard() {
-//        ArrayList<String> retreat = new ArrayList<>();
-//        retreat.add("fake");
-//        PokeCard nCard = new PokeCard("FAKE", "FAKE", "FAKE", "http://i0.kym-cdn.com/photos/images/original/000/006/467/4.Charmander.png", "FAKE", "FAKE", new Ability("fake","fake"), "FAKE", retreat ,"FAKE", "FAKE", "FAKE", "FAKE", "FAKE");
-//        return nCard;
-//    }
 
 }

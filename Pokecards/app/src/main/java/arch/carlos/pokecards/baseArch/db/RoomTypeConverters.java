@@ -47,23 +47,31 @@ public class RoomTypeConverters {
 
     @TypeConverter
     public static ArrayList<String> getStringList(String json) {
-        return getData(json);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(json,type);
     }
 
     @TypeConverter
     public static String persistStringList(ArrayList<String> data) {
-        return getDataField(data);
-    }
-
-    static <T> String getDataField(T data){
-        Type type = new TypeToken<T>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
         Gson gson = new Gson();
         return gson.toJson(data,type);
     }
-    static <T> T getData(String json){
+
+////////////////////
+
+    private static <T> T getData(String json){
         Type type = new TypeToken<T>() {}.getType();
         Gson gson = new Gson();
         return gson.fromJson(json,type);
+    }
+
+
+    private static <T> String getDataField(T data){
+        Type type = new TypeToken<T>() {}.getType();
+        Gson gson = new Gson();
+        return gson.toJson(data,type);
     }
 
 }

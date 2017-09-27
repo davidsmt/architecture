@@ -1,6 +1,7 @@
 package arch.carlos.pokecards.pokeApp.ui.main.adapter;
 
 import android.databinding.DataBindingUtil;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import arch.carlos.pokecards.R;
+import arch.carlos.pokecards.baseArch.utils.DiffAdapter;
 import arch.carlos.pokecards.databinding.LayoutPokecardItemBinding;
 import arch.carlos.pokecards.pokeApp.vo.PokeCard;
 
@@ -22,11 +24,12 @@ public class PokeCardListAdapter extends RecyclerView.Adapter<PokeCardViewHolder
     public List<PokeCard> items;
     private PokeCardEventListener mListener;
 
-    public PokeCardListAdapter(List items, PokeCardEventListener clickListener) {
-        this.items = items;
+    public PokeCardListAdapter(PokeCardEventListener clickListener) {
+        this.items = new ArrayList<>();
         mListener = clickListener;
-        holders = new ArrayList<PokeCardViewHolder>();
+        holders = new ArrayList<>();
     }
+
 
     @Override
     public PokeCardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,32 +48,20 @@ public class PokeCardListAdapter extends RecyclerView.Adapter<PokeCardViewHolder
 
     @Override
     public void onBindViewHolder(final PokeCardViewHolder holder, final int position) {
-        holder.bind(items.get(position));
+        holder.bind(items.get(position),position);
         holders.add(holder);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onClick(items.get(position).getId());
 
-            }
-        });
 
     }
 
-    public void updateItems(List<PokeCard> nItems){
-        items = nItems;
-        notifyDataSetChanged();
+
+    public void differItems(List<PokeCard> nItems) {
+        DiffAdapter<PokeCard> nDiff = new DiffAdapter<>(nItems,items);
+        this.items.clear();
+        this.items.addAll(nItems);
+        nDiff.updateList(this);
     }
 
-    public void addItem(PokeCard nItem){
-        items.add(nItem);
-        notifyDataSetChanged();
-    }
-
-    public void removeItem(PokeCard nItem){
-        items.remove(nItem);
-        notifyDataSetChanged();
-    }
 
     @Override
     public int getItemCount() {
@@ -78,7 +69,7 @@ public class PokeCardListAdapter extends RecyclerView.Adapter<PokeCardViewHolder
     }
 
     public interface PokeCardEventListener {
-        void onClick(String id);
+        void onClick(PokeCard card);
     }
 
 }

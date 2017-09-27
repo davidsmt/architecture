@@ -1,6 +1,8 @@
 package arch.carlos.pokecards.baseArch.repository;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
+import android.graphics.Path;
 import android.support.annotation.MainThread;
 
 import arch.carlos.pokecards.baseArch.AppExecutors;
@@ -8,12 +10,13 @@ import arch.carlos.pokecards.baseArch.api.ApiResponse;
 import arch.carlos.pokecards.baseArch.repository.notImplemented.CacheNotImplemented;
 import arch.carlos.pokecards.baseArch.repository.notImplemented.DBNotImplemented;
 import arch.carlos.pokecards.baseArch.repository.notImplemented.ExternalServiceNotImplemented;
+import arch.carlos.pokecards.baseArch.vo.Resource;
 
 /**
  * Created by mobgen on 9/22/17.
  */
 
-public class BaseRepositoryCreate<OperationResultAPI> {
+public class BaseRepositoryCreate<OperationResponse> {
 
     // Tells the service to load from these sources for this operation or to ignore the data they contain
     private boolean createInCache;
@@ -30,9 +33,12 @@ public class BaseRepositoryCreate<OperationResultAPI> {
     // Implementation of the services
     private final CacheCreateImpl cache;
     private final DBCreateImpl database;
-    private final ExternalServiceCreateImpl<OperationResultAPI> externalService;
+    private final ExternalServiceCreateImpl<OperationResponse> externalService;
 
-    public BaseRepositoryCreate(AppExecutors appExecutors, CacheCreateImpl cacheReadImpl, DBCreateImpl DBReadImpl, ExternalServiceCreateImpl<OperationResultAPI> externalExternalServiceReadImpl) {
+    // Stores the result of the add operation and all the changes
+    private final MediatorLiveData<Resource<OperationResponse>> result = new MediatorLiveData<>();
+
+    public BaseRepositoryCreate(AppExecutors appExecutors, CacheCreateImpl cacheReadImpl, DBCreateImpl DBReadImpl, ExternalServiceCreateImpl<OperationResponse> externalExternalServiceReadImpl) {
         this.appExecutors = appExecutors;
 
         this.cache = cacheReadImpl;
@@ -43,7 +49,7 @@ public class BaseRepositoryCreate<OperationResultAPI> {
         this.usesExternalService = true;
     }
 
-    public BaseRepositoryCreate(AppExecutors appExecutors, ExternalServiceCreateImpl<OperationResultAPI> externalExternalServiceReadImpl) {
+    public BaseRepositoryCreate(AppExecutors appExecutors, ExternalServiceCreateImpl<OperationResponse> externalExternalServiceReadImpl) {
         this.appExecutors = appExecutors;
 
         this.cache = new CacheNotImplemented();
@@ -70,12 +76,14 @@ public class BaseRepositoryCreate<OperationResultAPI> {
      * Delete the data from all implemented sources
      */
     @MainThread
-    public void createToAllSources() {
+    public LiveData<Resource<OperationResponse>> createToAllSources() {
         this.createInCache = usesLocalStorage;
         this.createInDB = usesLocalStorage;
         this.createInAPI = usesExternalService;
 
         executeCreate();
+
+        return result;
     }
 
     /**
@@ -83,12 +91,14 @@ public class BaseRepositoryCreate<OperationResultAPI> {
      * keeping in mind that this source has to be implemented
      */
     @MainThread
-    public void create(boolean createInCache, boolean createInDB, boolean createInAPI) {
+    public LiveData<Resource<OperationResponse>> create(boolean createInCache, boolean createInDB, boolean createInAPI) {
         this.createInCache = createInCache && usesLocalStorage;
         this.createInDB = createInDB && usesLocalStorage;
         this.createInAPI = createInAPI && usesExternalService;
 
         executeCreate();
+
+        return result;
 
     }
 
@@ -99,11 +109,12 @@ public class BaseRepositoryCreate<OperationResultAPI> {
         }
         if (createInDB) {
             appExecutors.diskIO().execute(database::DB_create);
-
         }
         if (usesExternalService && createInAPI) {
             externalService.API_create();
         }
+
+        result.setValue(Resource.success(null));
     }
 
 
