@@ -1,16 +1,15 @@
 package arch.carlos.pokecards.pokeApp.ui.main.adapter;
 
 import android.databinding.DataBindingUtil;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
 import arch.carlos.pokecards.R;
-import arch.carlos.pokecards.baseArch.utils.DiffAdapter;
+import arch.carlos.pokecards.baseArch.adapter.DiffAdapter;
+import arch.carlos.pokecards.baseArch.utils.ListDifferUtil;
 import arch.carlos.pokecards.databinding.LayoutPokecardItemBinding;
 import arch.carlos.pokecards.pokeApp.vo.PokeCard;
 
@@ -19,15 +18,14 @@ import arch.carlos.pokecards.pokeApp.vo.PokeCard;
  */
 
 
-public class PokeCardListAdapter extends RecyclerView.Adapter<PokeCardViewHolder> {
-    List<PokeCardViewHolder> holders;
-    public List<PokeCard> items;
+public class PokeCardListAdapter extends DiffAdapter<PokeCard, PokeCardViewHolder> {
+
     private PokeCardEventListener mListener;
 
+
     public PokeCardListAdapter(PokeCardEventListener clickListener) {
-        this.items = new ArrayList<>();
+        super();
         mListener = clickListener;
-        holders = new ArrayList<>();
     }
 
 
@@ -38,7 +36,7 @@ public class PokeCardListAdapter extends RecyclerView.Adapter<PokeCardViewHolder
         LayoutPokecardItemBinding binding = DataBindingUtil.inflate(
                 layoutInflater, R.layout.layout_pokecard_item, parent, false);
 
-        return new PokeCardViewHolder(binding);
+        return new PokeCardViewHolder(binding,mListener);
     }
 
     @Override
@@ -48,24 +46,7 @@ public class PokeCardListAdapter extends RecyclerView.Adapter<PokeCardViewHolder
 
     @Override
     public void onBindViewHolder(final PokeCardViewHolder holder, final int position) {
-        holder.bind(items.get(position),position);
-        holders.add(holder);
-
-
-    }
-
-
-    public void differItems(List<PokeCard> nItems) {
-        DiffAdapter<PokeCard> nDiff = new DiffAdapter<>(nItems,items);
-        this.items.clear();
-        this.items.addAll(nItems);
-        nDiff.updateList(this);
-    }
-
-
-    @Override
-    public int getItemCount() {
-        return items.size();
+        holder.bind(currentItems.get(position),position);
     }
 
     public interface PokeCardEventListener {

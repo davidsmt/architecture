@@ -23,6 +23,8 @@ import arch.carlos.pokecards.pokeApp.vo.PokeCard;
 
 /**
  * Created by mobgen on 9/15/17.
+ *
+ * This repository implements each base operation by creating a base CRUD operation, telling the requested type, and then implementing the mandatory operations of their interfaces
  */
 
 public class PokeCardRepositoryImpl {

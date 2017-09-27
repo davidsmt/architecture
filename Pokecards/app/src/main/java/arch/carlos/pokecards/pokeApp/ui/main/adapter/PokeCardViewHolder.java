@@ -15,16 +15,10 @@ public class PokeCardViewHolder extends RecyclerView.ViewHolder{
     private final LayoutPokecardItemBinding mBinding;
     private PokeCard mModel;
 
-    public PokeCardViewHolder(LayoutPokecardItemBinding binding) {
+    public PokeCardViewHolder(LayoutPokecardItemBinding binding, PokeCardListAdapter.PokeCardEventListener listener) {
         super(binding.getRoot());
         this.mBinding = binding;
-//        mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mListener.onClick(mModel));
-//
-//            }
-//        });
+        mBinding.getRoot().setOnClickListener(view -> listener.onClick(mModel));
     }
 
     public void bind(PokeCard itemViewModel, int position){
@@ -38,3 +32,4 @@ public class PokeCardViewHolder extends RecyclerView.ViewHolder{
         return mBinding;
     }
 }
+

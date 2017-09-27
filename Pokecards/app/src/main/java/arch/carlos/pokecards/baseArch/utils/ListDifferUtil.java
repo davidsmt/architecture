@@ -14,11 +14,11 @@ import arch.carlos.pokecards.baseArch.cache.DomainCache;
  * Created by mobgen on 9/26/17.
  */
 
-public class DiffAdapter<T extends DomainCache.Cacheable>{
+public class ListDifferUtil<T extends DomainCache.Cacheable>{
 
     final DiffUtil.DiffResult operations;
 
-    public DiffAdapter(List<T> newITems, List<T> oldItems){
+    public ListDifferUtil(List<T> newITems, List<T> oldItems){
         operations = DiffUtil.calculateDiff(new CacheableDiffCallback(newITems,oldItems));
     }
     public void updateList(RecyclerView.Adapter updateListener) {

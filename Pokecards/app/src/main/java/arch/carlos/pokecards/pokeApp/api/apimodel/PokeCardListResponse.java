@@ -8,6 +8,8 @@ import arch.carlos.pokecards.pokeApp.vo.PokeCard;
 
 /**
  * Created by mobgen on 9/21/17.
+ *
+ * Class that represents the html response for reading cards
  */
 
 public class PokeCardListResponse {

@@ -11,6 +11,9 @@ import java.util.Map;
 
 /**
  * Created by mobgen on 9/20/17.
+ *
+ *
+ * A single generic cache that contains each model cache, so there is no need to code each one.
  */
 
 public class DomainCache {

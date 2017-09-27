@@ -33,16 +33,23 @@ import arch.carlos.pokecards.baseArch.cache.DomainCache;
 import arch.carlos.pokecards.pokeApp.vo.components.Ability;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * TypeConverters for room entities, using gson parser to store all custom elements as strings.
+ */
 public class RoomTypeConverters {
 
     @TypeConverter
     public static Ability getAbility(String json) {
-        return getData(json);
+        Type type = new TypeToken<Ability>() {}.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(json,type);
     }
 
     @TypeConverter
     public static String persisitAbility(Ability data) {
-        return getDataField(data);
+        Type type = new TypeToken<Ability>() {}.getType();
+        Gson gson = new Gson();
+        return gson.toJson(data,type);
     }
 
     @TypeConverter
